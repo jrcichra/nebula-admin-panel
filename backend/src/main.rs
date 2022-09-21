@@ -10,6 +10,10 @@ use tempfile::TempDir;
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
+    /// Path to the static files
+    #[clap(long, value_parser, default_value = "dist")]
+    dist: String,
+
     /// Path to the signing CA cert
     #[clap(long, value_parser, default_value = "ca.crt")]
     ca_crt: String,
@@ -89,9 +93,9 @@ fn generate(request: Json<GenerateRequest>) -> Result<Json<GenerateResponse>, Js
 }
 #[launch]
 fn rocket() -> _ {
-    Args::parse();
+    let args = Args::parse();
     // serve static content and the generate route
     rocket::build()
-        .mount("/", FileServer::from("../gui/dist"))
+        .mount("/", FileServer::from(&args.dist))
         .mount("/", routes![generate])
 }

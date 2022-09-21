@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build Backend
-        run: cargo build --release
+        run: RUSTFLAGS='-C target-feature=+crt-static' cargo build --release --target x86_64-unknown-linux-gnu
         working-directory: backend
       - name: Download Frontend Deps
         run: yarn install
@@ -23,3 +23,12 @@ jobs:
       - name: Build Frontend
         run: yarn build
         working-directory: gui
+      - name: Combine Rust binary with frontend
+        run: |
+          mkdir -p /tmp/output
+          cp backend/target/x86_64-unknown-linux-gnu/release/nebula-admin-panel /tmp/output/
+          cp -r gui/dist/ /tmp/output/
+      - uses: actions/upload-artifact@v3
+        with:
+          name: nebula-admin-panel-linux-x86-64
+          path: /tmp/output/
