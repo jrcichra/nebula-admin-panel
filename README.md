@@ -8,6 +8,12 @@ See the Actions tab. Find a build from `main` and grab the zip. It will have a s
 
 I'm currently only building for Linux x86_64 statically.
 
+You'll want to set the `nebula-admin-panel` to executable and run it with something like:
+
+```
+ROCKET_ADDRESS=0.0.0.0 ./nebula-admin-panel
+```
+
 # Run from source
 
 ## Dependencies
@@ -21,7 +27,7 @@ I can write Typescript React without googling as much compared to vanilla Javasc
 
 I needed an excuse to write some Rust, and a small web server seemed like a good candidate. Unfortunately it makes it harder to deploy :-(
 
-## Steps
+## Developer Steps
 
 - `cd gui`
 - `yarn install`
