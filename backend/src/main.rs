@@ -42,10 +42,9 @@ struct ErrorResponse {
 
 #[post("/api/generate", data = "<request>")]
 fn generate(request: Json<GenerateRequest>) -> Result<Json<GenerateResponse>, Json<ErrorResponse>> {
-    let args = Args::parse(); // silly but easier than a rocket context right now
+    let args = Args::parse(); // TODO: silly but easier than a rocket context for now
     let temp_dir = TempDir::new().unwrap();
     let temp_dir_path = temp_dir.path().as_os_str().to_str().unwrap();
-    println!("{}", temp_dir_path);
     let out_crt = format!("{}/host.crt", temp_dir_path);
     let out_key = format!("{}/host.key", temp_dir_path);
     let res = Command::new("nebula-cert")

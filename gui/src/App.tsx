@@ -64,7 +64,7 @@ function App() {
         />
       </div>
       <div className="card">
-        <span className="card-label">IP Address: </span>
+        <span className="card-label">IP Address + CIDR: </span>
         <input
           className="card-input"
           type="text"
@@ -74,7 +74,7 @@ function App() {
         />
       </div>
       <div className="card">
-        <span className="card-label">Groups(comma-separated): </span>
+        <span className="card-label">Groups (comma separated): </span>
         <input
           className="card-input"
           type="text"

@@ -2,6 +2,28 @@
 
 A web gui for admins to provision new clients on the nebula network. Expected to be secured within nebula.
 
+# Run from source
+
+## Dependencies
+
+- `rust`
+- `node`
+
+## Why didn't you use Python, HTML, and maybe some Javascript?
+
+I can write Typescript React without googling as much compared to vanilla Javascript.
+
+I needed an excuse to write some Rust, and a small web server seemed like a good candidate. Unfortunately it makes it harder to deploy :-(
+
+## Steps
+
+- `cd gui`
+- `yarn install`
+- `yarn build`
+- `cd ../backend`
+- `cargo run --release`
+- Check http://localhost:8000
+
 # Firewall
 
 Example rule for host running admin panel:
