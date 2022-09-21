@@ -2,6 +2,12 @@
 
 A web gui for admins to provision new clients on the nebula network. Expected to be secured within nebula.
 
+# Run from precompiled
+
+See the Actions tab. Find a build from `main` and grab the zip. It will have a static binary and the `dist` folder with the frontend code.
+
+I'm currently only building for Linux x86_64 statically.
+
 # Run from source
 
 ## Dependencies
