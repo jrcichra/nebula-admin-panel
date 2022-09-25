@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 
 interface GenerateKeyResponse {
+  cacrt: string;
   crt: string;
   key: string;
   message?: string;
@@ -12,6 +13,7 @@ function App() {
   const [IP, setIP] = useState<string>("");
   const [groups, setGroups] = useState<string>("");
 
+  const [cacrt, setCACrt] = useState<string>();
   const [crt, setCrt] = useState<string>();
   const [key, setKey] = useState<string>();
 
@@ -23,6 +25,7 @@ function App() {
     groups: string
   ) => {
     if (clientName === "" || ip === "" || groups === "") {
+      setCACrt("");
       setCrt("");
       setKey("");
       setErrorMessage("Invalid input");
@@ -44,6 +47,7 @@ function App() {
       setErrorMessage(generateKey.message);
       return;
     }
+    setCACrt(generateKey.cacrt);
     setCrt(generateKey.crt);
     setKey(generateKey.key);
     setErrorMessage("");
@@ -91,6 +95,9 @@ function App() {
       {errorMessage && <pre className="error">{errorMessage}</pre>}
       {crt && key && (
         <div>
+          <span>ca.crt: </span>
+          <pre>{cacrt}</pre>
+          <p></p>
           <span>host.crt: </span>
           <pre>{crt}</pre>
           <p></p>

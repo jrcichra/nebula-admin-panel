@@ -34,6 +34,7 @@ struct GenerateRequest {
 #[derive(Serialize)]
 #[serde(crate = "rocket::serde")]
 struct GenerateResponse {
+    cacrt: String,
     crt: String,
     key: String,
 }
@@ -86,10 +87,10 @@ fn generate(request: Json<GenerateRequest>) -> Result<Json<GenerateResponse>, Js
 
     let crt: String = fs::read_to_string(&out_crt).unwrap().parse().unwrap();
     let key: String = fs::read_to_string(&out_key).unwrap().parse().unwrap();
+    let cacrt: String = fs::read_to_string(&args.ca_crt).unwrap().parse().unwrap();
 
     temp_dir.close().unwrap();
-
-    Ok(Json(GenerateResponse { crt, key }))
+    Ok(Json(GenerateResponse { crt, key, cacrt }))
 }
 #[launch]
 fn rocket() -> _ {
