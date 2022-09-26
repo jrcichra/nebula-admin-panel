@@ -6,7 +6,7 @@ use rocket::serde::{json::Json, Deserialize, Serialize};
 use std::fs;
 use std::process::Command;
 use tempfile::TempDir;
-
+use webhook::client::WebhookClient;
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
@@ -21,6 +21,10 @@ struct Args {
     /// Path to the signing CA cert
     #[clap(long, value_parser, default_value = "ca.key")]
     ca_key: String,
+
+    // Webhook to send alerts of new keys being provisioned to
+    #[clap(long, value_parser)]
+    webhook: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -46,7 +50,9 @@ struct ErrorResponse {
 }
 
 #[post("/api/generate", data = "<request>")]
-fn generate(request: Json<GenerateRequest>) -> Result<Json<GenerateResponse>, Json<ErrorResponse>> {
+async fn generate(
+    request: Json<GenerateRequest>,
+) -> Result<Json<GenerateResponse>, Json<ErrorResponse>> {
     let args = Args::parse(); // TODO: silly but easier than a rocket context for now
     let temp_dir = TempDir::new().unwrap();
     let temp_dir_path = temp_dir.path().as_os_str().to_str().unwrap();
@@ -88,8 +94,29 @@ fn generate(request: Json<GenerateRequest>) -> Result<Json<GenerateResponse>, Js
     let crt: String = fs::read_to_string(&out_crt).unwrap().parse().unwrap();
     let key: String = fs::read_to_string(&out_key).unwrap().parse().unwrap();
     let cacrt: String = fs::read_to_string(&args.ca_crt).unwrap().parse().unwrap();
-
     temp_dir.close().unwrap();
+
+    // Send to discord if configured
+    match args.webhook {
+        Some(w) => {
+            let client: WebhookClient = WebhookClient::new(&w);
+            let content = format!(
+                "New nebula client provisioned for: {}",
+                &request.client_name
+            );
+            let res = client
+                .send(|message| message.username("nebula-admin-panel").content(&content))
+                .await;
+
+            match res {
+                Ok(_) => {}
+                Err(x) => {
+                    println!("Could not send Discord message! {:?}", x)
+                }
+            }
+        }
+        None => {}
+    }
     Ok(Json(GenerateResponse { crt, key, cacrt }))
 }
 #[launch]

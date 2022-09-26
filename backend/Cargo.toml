@@ -9,4 +9,4 @@ edition = "2021"
 clap = { version = "3.2.22", features = ["derive"] }
 rocket = { version = "0.5.0-rc.2", features = ["json"] }
 tempfile = "3.3.0"
-
+webhook = "2.1.1"
