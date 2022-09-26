@@ -37,7 +37,7 @@ jobs:
       - name: Combine Rust binary with frontend
         run: |
           mkdir -p /tmp/output
-          cp backend/target/x86_64-unknown-linux-gnu/release/nebula-admin-panel /tmp/output/
+          cp backend/target/x86_64-unknown-linux-musl/release/nebula-admin-panel /tmp/output/
           cp -r gui/dist/ /tmp/output/
       - uses: actions/upload-artifact@v3
         with:
