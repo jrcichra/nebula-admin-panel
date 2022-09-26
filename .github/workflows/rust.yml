@@ -22,7 +22,7 @@ jobs:
             backend/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Build Backend
-        run: RUSTFLAGS='-C target-feature=+crt-static' cargo build --release --target x86_64-unknown-linux-gnu
+        run: cargo build --release --target x86_64-unknown-linux-musl
         working-directory: backend
       - name: Download Frontend Deps
         run: yarn install
@@ -33,7 +33,7 @@ jobs:
       - name: Combine Rust binary with frontend
         run: |
           mkdir -p /tmp/output
-          cp backend/target/x86_64-unknown-linux-gnu/release/nebula-admin-panel /tmp/output/
+          cp backend/target/x86_64-unknown-linux-musl/release/nebula-admin-panel /tmp/output/
           cp -r gui/dist/ /tmp/output/
       - uses: actions/upload-artifact@v3
         with:
